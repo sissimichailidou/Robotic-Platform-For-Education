@@ -1,0 +1,296 @@
+<html manifest=node.manifest>
+<head>
+  <meta charset="utf-8">
+  <title>Robotic Platform For Education</title>
+  <script type="text/javascript" src="../../blockly_compressed.js"></script>
+  <script type="text/javascript" src="../../blocks_compressed.js"></script>
+  <script type="text/javascript" src="../../code_arduino_compressed.js"></script>
+  <script type="text/javascript" src="../../msg/js/en.js"></script>
+  <script type="text/javascript" src="../../blocks/arxika.js"></script>	
+  <script type="text/javascript" src="../../blocks/kinisi.js"></script>
+  <script type="text/javascript" src="../../generators/arduino/kinisi.js">
+	</script>	
+  <script type="text/javascript" src="../../blocks/examples.js"></script>
+  <script type="text/javascript" src="../../blocks/loops.js"></script>
+  <script type="text/javascript" src="../../blocks/base.js"></script>	
+  <script type="text/javascript" src="../../generators/arduino/arxika.js"></script>
+  <script type="text/javascript" src="../../generators/arduino/examples.js"></script>
+  <script type="text/javascript" src="../../generators/arduino/base.js"></script>
+  <script type="text/javascript" src="../../generators/arduino/loops.js"></script>
+  <script>
+
+var TABS_ = ['blocks', 'arduino', 'xml'];
+
+var selected = 'blocks';
+
+function tabClick(clickedName) {
+  if (document.getElementById('tab_blocks').className == 'tabon') {
+    Blockly.mainWorkspace.setVisible(false);
+  }
+    for (var i = 0; i < TABS_.length; i++) {
+    var name = TABS_[i];
+    document.getElementById('tab_' + name).className = 'taboff';
+    document.getElementById('content_' + name).style.visibility = 'hidden';
+  }
+
+  selected = clickedName;
+  document.getElementById('tab_' + clickedName).className = 'tabon';
+  document.getElementById('content_' + clickedName).style.visibility =
+      'visible';
+  renderContent();
+  if (clickedName == 'blocks') {
+    Blockly.mainWorkspace.setVisible(true);
+  }
+  Blockly.fireUiEvent(window, 'resize');
+}
+
+function renderContent() {
+  var content = document.getElementById('content_' + selected);
+  if (content.id == 'content_blocks') {
+    Blockly.mainWorkspace.render();
+  } else if (content.id == 'content_xml') {
+    var xmlTextarea = document.getElementById('content_xml');
+    var xmlDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+    var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+    xmlTextarea.value = xmlText;
+    xmlTextarea.focus();
+  } else if (content.id == 'content_arduino') {
+    var arduinoTextarea = document.getElementById('content_arduino');
+    arduinoTextarea.value = Blockly.Arduino.workspaceToCode();
+    arduinoTextarea.focus();
+  }
+}
+function getBBox_(element) {
+  var height = element.offsetHeight;
+  var width = element.offsetWidth;
+  var x = 0;
+  var y = 0;
+  do {
+    x += element.offsetLeft;
+    y += element.offsetTop;
+    element = element.offsetParent;
+  } while (element);
+  return {
+    height: height,
+    width: width,
+    x: x,
+    y: y
+  };
+}
+
+function init() {
+  var container = document.getElementById('content_area');
+  var onresize = function(e) {
+    var bBox = getBBox_(container);
+    for (var i = 0; i < TABS_.length; i++) {
+      var el = document.getElementById('content_' + TABS_[i]);
+      el.style.top = bBox.y + 'px';
+      el.style.left = bBox.x + 'px';
+
+      el.style.height = bBox.height + 'px';
+      el.style.height = (2 * bBox.height - el.offsetHeight) + 'px';
+      el.style.width = bBox.width + 'px';
+      el.style.width = (2 * bBox.width - el.offsetWidth) + 'px';
+    }
+    if (Blockly.mainWorkspace.toolbox_.width) {
+      document.getElementById('tab_blocks').style.minWidth =
+          (Blockly.mainWorkspace.toolbox_.width - 38) + 'px';
+    }
+  };
+  window.addEventListener('resize', onresize, false);
+
+  var toolbox = document.getElementById('toolbox');
+  Blockly.inject(document.getElementById('content_blocks'),
+      {grid:
+          {spacing: 30,
+           length: 8,
+           colour: '#C5AAB0',
+           snap: true},
+       media: '../../media/',
+       toolbox: toolbox});
+}
+  </script>
+  <style>
+    html, body {
+      height: 100%;
+    }
+    body {
+      background-color: #D7C1C4;
+      font-family: sans-serif;
+      margin: 0;
+      overflow: hidden;
+    }
+    h1 {
+      font-weight: 800;
+      font-size: 160%;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+    #tabRow>td {
+      border: 1px solid #C5AAB0;
+    }
+    td.tabon {
+      border-bottom-color: #E7DADE!important;
+      background-color: #E7DADE;
+      padding: 5px 19px;
+    }
+    td.taboff {
+      cursor: pointer;
+      padding: 5px 19px;
+    }
+    td.taboff:hover {
+      background-color: #C5AAB0;
+    }
+    td.tabmin {
+      border-top-style: none !important;
+      border-left-style: none !important;
+      border-right-style: none !important;
+    }
+    td.tabmax {
+      border-top-style: none !important;
+      border-left-style: none !important;
+      border-right-style: none !important;
+      width: 99%;
+      text-align: right;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 0;
+      padding: 0;
+      border: none;
+
+    }
+    td {
+      padding: 0;
+      vertical-align: top;
+    }
+    .content {
+      visibility: hidden;
+      margin: 0;
+      padding: 1ex;
+      position: absolute;
+      direction: ltr;
+    }
+    pre.content {
+      overflow: scroll;
+    }
+    #content_blocks {
+      padding: 0;
+    }
+    .blocklySvg {
+      border-top: none !important;
+    }
+    #content_xml {
+      resize: none;
+      outline: none;
+      border: none;
+      font-family: monospace;
+      overflow: scroll;
+    }
+    button {
+      padding: 1px 1em;
+      font-size: 90%;
+      border-radius: 4px;
+      border: 1px solid #A29190;
+      background-color: #C5AAB0;
+      color: green;
+    }
+    button.launch {
+      border: 1px solid #A29190;
+      background-color: #C5AAB0;
+      color: white;
+    }
+    button:active {
+      border: 1px solid #A29190 !important;
+	  background-color: #E7DADE;
+    }
+    button:hover {
+      box-shadow: 3px 3px 5px #C5AAB0;
+    }
+  </style>
+</head>
+<body onload="init()">
+  <table height="100%" width="100%">
+    <tr>
+      <td>
+        <h1>Educational Robotics: The First Steps</h1>
+		  <style>
+  h1 {color: #523f63;}
+</style>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table width="100%">
+          <tr id="tabRow" height="1em">
+            <td id="tab_blocks" class="tabon" onclick="tabClick('blocks')">Blocks</td>
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_arduino" class="taboff" onclick="tabClick('arduino')">Arduino</td>
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_xml" class="taboff" onclick="tabClick('xml')">XML</td>
+            <td class="tabmax">
+              <input type="file" id="load" style="display: none;"/> 
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td height="100%" id="content_area"></td>
+    </tr>
+  </table>
+  <div id="content_blocks" class="content"></div>
+  <textarea id="content_arduino" class="content" readonly wrap="off"></textarea>
+  <textarea id="content_xml" class="content" wrap="off"></textarea>
+  <xml id="toolbox" style="display: none">
+    <category name="Initialization">        
+      <block type="arduino_setup"></block>
+	  <block type="bibliothikes"></block>
+	  <block type="max_apostasi"></block>
+	  <block type="trigger_echo"></block>
+	  <block type="end_loop"></block>
+    </category>
+	<category name="Loops And Conditions">
+	  <block type="controls_repeat"></block>
+	  <block type="controls_if"></block>
+	  <block type="logic_compare"></block>
+	  <block type="variables_get"></block>
+	  </category>
+    <category name="Numbers And Values">
+	  <block type="math_number"></block>
+      <block type="base_delay">
+        <value name="DELAY_TIME">
+          <block type="math_number">
+            <field name="NUM">1000</field>
+          </block>
+			 </value>
+		  </block>	
+		</category>
+    <category name="Movement Control">
+      <block type="kin4motors"></block>
+	  <block type="init_ultrasonic"></block>
+	  <block type="kin2backmotors"></block>
+	  <block type="kin1motor"></block>
+	  <block type="kin2apostasi"></block>
+    </category>
+	<category name="Step-By-Step Control">
+	  <block type="paradigmtitle1"></block>
+	  <block type="square_seq"></block>
+	  <block type="askisititle1"></block>
+	  <block type="square_seq_part1"></block>
+	  <block type="square_seq_part2"></block>
+	  <block type="askisititle2"></block>
+	  <block type="paradigm2_part1"></block>
+	  <block type="paradigm2_part2"></block>
+	  <block type="paradigm2_part3"></block>
+	  <block type="paradigm2_part4"></block>
+	  </category>
+        <value name="DELAY_TIME">
+          <block type="math_number">
+            <field name="NUM">1000</field>
+          </block>
+        </value>
+  </xml>	
+</body>
+</html>
